@@ -3,6 +3,7 @@ package src
 import (
 	"log"
 	"openidea-banking/configs"
+	"openidea-banking/middleware"
 
 	"github.com/goccy/go-json"
 
@@ -18,6 +19,8 @@ func StartApplication(port string, prefork bool) {
 		ReadTimeout:  configs.ReadTimeout,
 		Prefork:      prefork,
 	})
+
+	app.Use(middleware.PrometheusMiddleware)
 
 	err := app.Listen(":" + port)
 	log.Fatal(err)
