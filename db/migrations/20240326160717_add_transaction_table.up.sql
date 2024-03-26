@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS transactions (
+  transaction_id UUID PRIMARY KEY NOT NULL,
+  user_id UUID NOT NULL,
+  balance DECIMAL(12, 2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+)
