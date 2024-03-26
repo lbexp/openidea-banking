@@ -7,6 +7,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.52.3
 	github.com/prometheus/client_golang v1.19.0
 	github.com/spf13/viper v1.18.2
+	golang.org/x/crypto v0.19.0
 )
 
 require (
