@@ -1,28 +1,27 @@
-package app
+package src
 
 import (
 	"log"
-	"openidea-banking/src/config"
+	"openidea-banking/configs"
+	"openidea-banking/middleware"
 
 	"github.com/goccy/go-json"
+
 	"github.com/gofiber/fiber/v2"
 )
 
-func Start(port string, prefork bool) {
+func StartApplication(port string, prefork bool) {
 	app := fiber.New(fiber.Config{
 		JSONEncoder:  json.Marshal,
 		JSONDecoder:  json.Unmarshal,
-		IdleTimeout:  config.IdleTimeout,
-		WriteTimeout: config.WriteTimeout,
-		ReadTimeout:  config.ReadTimeout,
+		IdleTimeout:  configs.IdleTimeout,
+		WriteTimeout: configs.WriteTimeout,
+		ReadTimeout:  configs.ReadTimeout,
 		Prefork:      prefork,
 	})
 
-	dbPool := InitDbPool()
-	defer dbPool.Close()
-
-	RegisterRoutes(app, dbPool)
+	app.Use(middleware.PrometheusMiddleware)
 
 	err := app.Listen(":" + port)
-	log.Fatal("Failed to start app - ", err)
+	log.Fatal(err)
 }
