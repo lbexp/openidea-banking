@@ -1,11 +1,10 @@
 package src
 
 import (
+	"encoding/json"
 	"log"
-	"openidea-banking/configs"
-	"openidea-banking/middleware"
-
-	"github.com/goccy/go-json"
+	"openidea-banking/src/config"
+	"openidea-banking/src/middleware"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -14,9 +13,9 @@ func StartApplication(port string, prefork bool) {
 	app := fiber.New(fiber.Config{
 		JSONEncoder:  json.Marshal,
 		JSONDecoder:  json.Unmarshal,
-		IdleTimeout:  configs.IdleTimeout,
-		WriteTimeout: configs.WriteTimeout,
-		ReadTimeout:  configs.ReadTimeout,
+		IdleTimeout:  config.IdleTimeout,
+		WriteTimeout: config.WriteTimeout,
+		ReadTimeout:  config.ReadTimeout,
 		Prefork:      prefork,
 	})
 

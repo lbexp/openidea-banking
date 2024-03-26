@@ -4,7 +4,7 @@ import (
 	"flag"
 	"openidea-banking/src"
 
-	_ "openidea-banking/configs"
+	_ "openidea-banking/src/config"
 )
 
 func main() {
