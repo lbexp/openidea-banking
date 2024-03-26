@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"openidea-banking/src"
+
+	_ "openidea-banking/configs"
 )
 
 func main() {
