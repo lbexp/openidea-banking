@@ -1,4 +1,4 @@
-package balance_entity
+package balance_model
 
 type Balance struct {
 	BalanceId string

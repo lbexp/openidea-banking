@@ -41,7 +41,7 @@ func (repository *UserRepositoryImpl) Register(ctx context.Context, tx pgx.Tx, u
 }
 
 func (repository *UserRepositoryImpl) Login(ctx context.Context, conn *pgxpool.Pool, user user_model.User) (user_model.User, error) {
-	QUERY := "SELECT user_id, email, password, name FROM users WHERE email=$1"
+	QUERY := "SELECT user_id, email, password, name FROM users WHERE email = $1"
 
 	userResult := user_model.User{}
 
