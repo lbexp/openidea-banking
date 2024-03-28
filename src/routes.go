@@ -17,7 +17,7 @@ func RegisterRoute(app *fiber.App, dbPool *pgxpool.Pool) {
 
 	authService := service.NewAuthService()
 
-	userRepository := repository.New()
+	userRepository := repository.NewUserRepository()
 	userService := service.NewUserService(dbPool, userRepository, authService)
 	userController := controller.NewUserController(validator, userService, authService)
 
