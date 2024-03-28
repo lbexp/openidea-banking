@@ -10,6 +10,7 @@ run:
 startprom:
 	docker run \
 	--rm \
+	-d \
 	-p 9090:9090 \
 	--name=prometheus \
 	-v $(shell pwd)/prometheus.yml:/etc/prometheus/prometheus.yml \
@@ -18,7 +19,7 @@ startprom:
 startgrafana:
 	docker volume create grafana-storage
 	docker volume inspect grafana-storage
-	docker run --rm -p 3000:3000 --name=grafana grafana/grafana-oss || docker start grafana
+	docker run --rm -d -p 3000:3000 --name=grafana grafana/grafana-oss || docker start grafana
 
 build-docker:
 	docker build -t banking-app --file ./dockerfiles/backend/Dockerfile .
