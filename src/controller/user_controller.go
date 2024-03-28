@@ -17,14 +17,12 @@ type UserController interface {
 type UserControllerImpl struct {
 	Validator   *validator.Validate
 	UserService service.UserService
-	AuthService service.AuthService
 }
 
-func NewUserController(validator *validator.Validate, userService service.UserService, authService service.AuthService) UserController {
+func NewUserController(validator *validator.Validate, userService service.UserService) UserController {
 	return &UserControllerImpl{
 		Validator:   validator,
 		UserService: userService,
-		AuthService: authService,
 	}
 }
 
@@ -81,7 +79,7 @@ func (controller *UserControllerImpl) Login(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.Status(fiber.StatusCreated).JSON(user_model.UserResponse{
+	return ctx.Status(fiber.StatusOK).JSON(user_model.UserResponse{
 		Message: "User logged successfully",
 		Data: user_model.UserData{
 			Email:       user.Email,
