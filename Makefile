@@ -6,3 +6,42 @@ migratedown:
 
 run:
 	go run main.go
+
+startprom:
+	docker run \
+	--rm \
+	-p 9090:9090 \
+	--name=prometheus \
+	-v $(shell pwd)/prometheus.yml:/etc/prometheus/prometheus.yml \
+	prom/prometheus
+
+startgrafana:
+	docker volume create grafana-storage
+	docker volume inspect grafana-storage
+	docker run --rm -p 3000:3000 --name=grafana grafana/grafana-oss || docker start grafana
+
+build-docker:
+	docker build -t banking-app ./dockerfiles/backend/
+
+run-docker:
+	docker run \
+	--rm \
+	--pid=host \
+	-d \
+	--name banking-app-container  \
+	-e DB_NAME=$(shell echo $$DB_NAME) \
+	-e DB_USERNAME=$(shell echo $$DB_USERNAME) \
+	-e DB_PASSWORD=$(shell echo $$DB_PASSWORD) \
+	-e DB_HOST=host.docker.internal \
+	-e DB_PORT=$(shell echo $$DB_PORT) \
+	-e JWT_SECRET=$(shell echo $$JWT_SECRET) \
+	-e BCRYPT_SALT=$(shell echo $$BCRYPT_SALT) \
+	-e S3_ID=$(shell echo $$S3_ID) \
+	-e S3_SECRET_KEY=$(shell echo $$S3_SECRET_KEY) \
+	-e S3_BUCKET_NAME=$(shell echo $$S3_BUCKET_NAME) \
+	-e S3_REGION=$(shell echo $$S3_REGION) \
+	-e DB_PARAMS=$(shell echo $$DB_PARAMS) \
+	-p 8080:8080 \
+	banking-app
+
+.PHONY: migrateup migratedown run startprom startgrafana build build-docker run-docker
