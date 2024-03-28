@@ -26,6 +26,12 @@ func StartApplication(port string, prefork bool) {
 	db := GetConnectionDB()
 	defer db.Close()
 
+	healthChecker := middleware.HealthChecker{
+		DB:  db,
+		App: app,
+	}
+
+	app.Use(healthChecker.HealthCheckMiddleware)
 	app.Use(middleware.PrometheusMiddleware)
 	app.Get("/metrics", adaptor.HTTPHandler(promhttp.Handler()))
 
