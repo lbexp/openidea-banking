@@ -46,6 +46,9 @@ func (controller *UserControllerImpl) Register(ctx *fiber.Ctx) error {
 		Password: request.Password,
 		Name:     request.Name,
 	})
+	if err != nil {
+		return err
+	}
 
 	return ctx.Status(fiber.StatusCreated).JSON(user_model.UserResponse{
 		Message: "User registered successfully",
@@ -74,6 +77,9 @@ func (controller *UserControllerImpl) Login(ctx *fiber.Ctx) error {
 		Email:    request.Email,
 		Password: request.Password,
 	})
+	if err != nil {
+		return err
+	}
 
 	return ctx.Status(fiber.StatusCreated).JSON(user_model.UserResponse{
 		Message: "User logged successfully",

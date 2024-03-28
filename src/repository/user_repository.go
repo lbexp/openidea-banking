@@ -17,7 +17,7 @@ type UserRepository interface {
 type UserRepositoryImpl struct {
 }
 
-func New() UserRepository {
+func NewUserRepository() UserRepository {
 	return &UserRepositoryImpl{}
 }
 
