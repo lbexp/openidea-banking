@@ -24,7 +24,7 @@ func mustValidRegisterRequest(sl validator.StructLevel) {
 }
 
 func mustValidLoginRequest(sl validator.StructLevel) {
-	request := sl.Current().Interface().(user_model.UserRegisterRequest)
+	request := sl.Current().Interface().(user_model.UserLoginRequest)
 
 	email := request.Email
 	if !isValidEmail(email) {
