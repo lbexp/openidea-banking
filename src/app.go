@@ -9,6 +9,8 @@ import (
 	"openidea-banking/src/utils"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/adaptor"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func StartApplication(port string, prefork bool) {
@@ -25,6 +27,7 @@ func StartApplication(port string, prefork bool) {
 	defer db.Close()
 
 	app.Use(middleware.PrometheusMiddleware)
+	app.Get("/metrics", adaptor.HTTPHandler(promhttp.Handler()))
 
 	RegisterRoute(app, dbPool)
 	app.Use(utils.HandleErrorNotFound)
