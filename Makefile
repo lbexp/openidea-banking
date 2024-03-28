@@ -21,7 +21,7 @@ startgrafana:
 	docker run --rm -p 3000:3000 --name=grafana grafana/grafana-oss || docker start grafana
 
 build-docker:
-	docker build -t banking-app --file ./dockerfiles/backend/Dockerfile . --progress=plain --no-cache
+	docker build -t banking-app --file ./dockerfiles/backend/Dockerfile .
 
 run-docker:
 	docker run \
