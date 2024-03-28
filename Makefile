@@ -21,7 +21,7 @@ startgrafana:
 	docker run --rm -p 3000:3000 --name=grafana grafana/grafana-oss || docker start grafana
 
 build-docker:
-	docker build -t banking-app ./dockerfiles/backend/
+	docker build -t banking-app --file ./dockerfiles/backend/Dockerfile . --progress=plain --no-cache
 
 run-docker:
 	docker run \
@@ -44,4 +44,4 @@ run-docker:
 	-p 8080:8080 \
 	banking-app
 
-.PHONY: migrateup migratedown run startprom startgrafana build build-docker run-docker
+.PHONY: migrateup migratedown run startprom startgrafana build clean build-docker run-docker
