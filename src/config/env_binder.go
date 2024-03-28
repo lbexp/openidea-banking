@@ -2,6 +2,10 @@ package config
 
 import "github.com/spf13/viper"
 
+func init() {
+	InitEnvBinder()
+}
+
 func InitEnvBinder() {
 	/**
 	 * DB related variables
