@@ -3,6 +3,7 @@ package src
 import (
 	"openidea-banking/src/controller"
 	"openidea-banking/src/repository"
+	"openidea-banking/src/security"
 	"openidea-banking/src/service"
 	"openidea-banking/src/validation"
 
@@ -29,6 +30,9 @@ func RegisterRoute(app *fiber.App, dbPool *pgxpool.Pool) {
 	balanceService := service.NewBalanceService(dbPool, balanceRepository, transactionRepository)
 	balanceController := controller.NewBalanceController(validator, balanceService, authService)
 
+	imageService := service.NewImageService(security.GetAwsS3Session())
+	imageController := controller.NewImageController(authService, imageService)
+
 	app.Post("/v1/user/register", userController.Register)
 	app.Post("/v1/user/login", userController.Login)
 
@@ -36,4 +40,6 @@ func RegisterRoute(app *fiber.App, dbPool *pgxpool.Pool) {
 
 	app.Post("/v1/balance", balanceController.Upsert)
 	app.Get("/v1/balance", balanceController.GetAll)
+
+	app.Post("/v1/image", imageController.UploadImage)
 }
