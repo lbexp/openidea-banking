@@ -63,6 +63,8 @@ func (service *BalanceServiceImpl) Upsert(ctx context.Context, transaction trans
 		return err
 	}
 
+	tx.Commit(ctx)
+
 	return nil
 }
 
