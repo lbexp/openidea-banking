@@ -4,7 +4,7 @@ type TransactionRequest struct {
 	RecipientBankAccountNumber string `json:"recipientBankAccountNumber" validate:"required,min=5,max=30"`
 	RecipientBankName          string `json:"recipientBankName" validate:"required,min=5,max=30"`
 	FromCurrency               string `json:"fromCurrency" validate:"required,iso4217"`
-	Balances                   string `json:"balances" validate:"required,number"`
+	Balances                   int    `json:"balances" validate:"required,number"`
 }
 
 type GetAllByUserIdFilters struct {

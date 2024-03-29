@@ -22,6 +22,8 @@ func RegisterRoute(app *fiber.App, dbPool *pgxpool.Pool) {
 	userController := controller.NewUserController(validator, userService)
 
 	transactionRepository := repository.NewTransactionRepository()
+	transactionService := service.NewTransactionService(dbPool, transactionRepository)
+	transactionController := controller.NewTransactionController(validator, transactionService, authService)
 
 	balanceRepository := repository.NewBalanceRepository()
 	balanceService := service.NewBalanceService(dbPool, balanceRepository, transactionRepository)
@@ -29,6 +31,8 @@ func RegisterRoute(app *fiber.App, dbPool *pgxpool.Pool) {
 
 	app.Post("/v1/user/register", userController.Register)
 	app.Post("/v1/user/login", userController.Login)
+
+	app.Post("/v1/transaction", transactionController.Create)
 
 	app.Post("/v1/balance", balanceController.Upsert)
 	app.Get("/v1/balance", balanceController.GetAll)
