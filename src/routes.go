@@ -40,6 +40,7 @@ func RegisterRoute(app *fiber.App, dbPool *pgxpool.Pool) {
 
 	app.Post("/v1/balance", balanceController.Upsert)
 	app.Get("/v1/balance", balanceController.GetAll)
+	app.Get("/v1/balance/history", transactionController.GetAllByUserId)
 
 	app.Post("/v1/image", imageController.UploadImage)
 }

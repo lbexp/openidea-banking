@@ -1,9 +1,11 @@
 package controller
 
 import (
+	common_model "openidea-banking/src/model/common"
 	transaction_model "openidea-banking/src/model/transaction"
 	"openidea-banking/src/service"
 	"openidea-banking/src/utils"
+	"strconv"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -11,6 +13,7 @@ import (
 
 type TransactionController interface {
 	Create(ctx *fiber.Ctx) error
+	GetAllByUserId(ctx *fiber.Ctx) error
 }
 
 type TransactionControllerImpl struct {
@@ -29,6 +32,48 @@ func NewTransactionController(
 		TransactionService: transactionService,
 		AuthService:        authService,
 	}
+}
+
+func validateQueryParams(req map[string]string) (transaction_model.GetAllByUserIdFilters, error) {
+	var filters transaction_model.GetAllByUserIdFilters
+	limitVal, isLimitExists := req["limit"]
+
+	if !isLimitExists && limitVal == "" {
+		filters.Limit = 5
+	} else {
+		resultLimit, err := strconv.Atoi(limitVal)
+		if err != nil {
+			return transaction_model.GetAllByUserIdFilters{}, utils.ErrorBadRequest
+		}
+
+		if resultLimit < 0 {
+			return transaction_model.GetAllByUserIdFilters{}, utils.ErrorBadRequest
+		}
+
+		filters.Limit = resultLimit
+	}
+
+	if isLimitExists && limitVal == "" {
+		return transaction_model.GetAllByUserIdFilters{}, utils.ErrorBadRequest
+	}
+
+	offsetVal, isOffsetExists := req["offset"]
+	if !isOffsetExists && offsetVal == "" {
+		filters.Offset = 0
+	} else {
+		resultOffset, err := strconv.Atoi(offsetVal)
+		if err != nil {
+			return transaction_model.GetAllByUserIdFilters{}, utils.ErrorBadRequest
+		}
+
+		filters.Offset = resultOffset
+	}
+
+	if isOffsetExists && offsetVal == "" {
+		return transaction_model.GetAllByUserIdFilters{}, utils.ErrorBadRequest
+	}
+
+	return filters, nil
 }
 
 func (controller *TransactionControllerImpl) Create(ctx *fiber.Ctx) error {
@@ -61,4 +106,50 @@ func (controller *TransactionControllerImpl) Create(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON("Success")
+}
+
+func (controller *TransactionControllerImpl) GetAllByUserId(ctx *fiber.Ctx) error {
+	filters, err := validateQueryParams(ctx.Queries())
+	if err != nil {
+		return err
+	}
+
+	userId, err := controller.AuthService.GetValidUser(ctx)
+	if err != nil {
+		return err
+	}
+
+	transactions, totalItems, err := controller.TransactionService.GetAllByUserId(ctx.UserContext(), userId, filters)
+	if err != nil {
+		return err
+	}
+
+	var data []transaction_model.TransactionGetAllData
+	for _, transaction := range transactions {
+		rowData := transaction_model.TransactionGetAllData{
+			TransactionId:    transaction.TransactionId,
+			Balance:          transaction.Balance,
+			Currency:         transaction.Currency,
+			TransferProofImg: transaction.ProofImageUrl,
+			CreatedAt:        transaction.CreatedAt,
+			Source: transaction_model.TransactionSource{
+				BankAccountNumber: transaction.BankAccountNumber,
+				BankName:          transaction.BankName,
+			},
+		}
+
+		data = append(data, rowData)
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(
+		transaction_model.TransactionGetAllResponse{
+			Message: "success",
+			Data:    data,
+			Meta: common_model.MetaResponse{
+				Limit:  filters.Limit,
+				Offset: filters.Offset,
+				Total:  totalItems,
+			},
+		},
+	)
 }

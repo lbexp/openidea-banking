@@ -8,4 +8,5 @@ type Transaction struct {
 	ProofImageUrl     string
 	BankAccountNumber string
 	BankName          string
+	CreatedAt         string
 }

@@ -11,6 +11,7 @@ import (
 
 type TransactionService interface {
 	Create(ctx context.Context, transaction transaction_model.Transaction) error
+	GetAllByUserId(ctx context.Context, userId string, filters transaction_model.GetAllByUserIdFilters) ([]transaction_model.Transaction, int, error)
 }
 
 type TransactionServiceImpl struct {
@@ -52,4 +53,13 @@ func (service *TransactionServiceImpl) Create(ctx context.Context, transaction t
 	tx.Commit(ctx)
 
 	return nil
+}
+
+func (service *TransactionServiceImpl) GetAllByUserId(ctx context.Context, userId string, filters transaction_model.GetAllByUserIdFilters) ([]transaction_model.Transaction, int, error) {
+	transactions, totalItems, err := service.TransactionRepository.GetAllByUserId(ctx, service.DBPool, userId, filters)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return transactions, totalItems, nil
 }
