@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -27,7 +28,14 @@ func (hc *HealthChecker) HealthCheckMiddleware(ctx *fiber.Ctx) error {
 		return ctx.Next()
 	}
 
-	err := hc.DB.Ping(context.Background())
+	_, err := http.Get(ctx.BaseURL() + "/")
+	if err != nil {
+		return ctx.Status(fiber.StatusServiceUnavailable).JSON(map[string]string{
+			"service": err.Error(),
+		})
+	}
+
+	err = hc.DB.Ping(context.Background())
 	if err != nil {
 		return ctx.Status(fiber.StatusServiceUnavailable).JSON(map[string]string{
 			"service": err.Error(),
