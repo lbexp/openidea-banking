@@ -17,19 +17,33 @@ type TransactionService interface {
 type TransactionServiceImpl struct {
 	DBPool                *pgxpool.Pool
 	TransactionRepository repository.TransactionRepository
+	BalanceRepository     repository.BalanceRepository
 }
 
 func NewTransactionService(
 	dbPool *pgxpool.Pool,
 	transactionRepository repository.TransactionRepository,
+	balanceRepository repository.BalanceRepository,
 ) TransactionService {
 	return &TransactionServiceImpl{
 		DBPool:                dbPool,
 		TransactionRepository: transactionRepository,
+		BalanceRepository:     balanceRepository,
 	}
 }
 
 func (service *TransactionServiceImpl) Create(ctx context.Context, transaction transaction_model.Transaction) error {
+	balance, err := service.BalanceRepository.GetByUserIdAndCurrency(ctx, service.DBPool, transaction.UserId, transaction.Currency)
+	if err != nil {
+		return err
+	}
+
+	if transaction.Balance > balance.Balance {
+		return utils.ErrorBadRequest
+	}
+
+	balance.Balance = -transaction.Balance
+
 	tx, err := service.DBPool.Begin(ctx)
 	defer func() {
 		if err != nil {
@@ -46,6 +60,11 @@ func (service *TransactionServiceImpl) Create(ctx context.Context, transaction t
 	}
 
 	err = service.TransactionRepository.Create(ctx, tx, transaction)
+	if err != nil {
+		return err
+	}
+
+	err = service.BalanceRepository.Upsert(ctx, tx, balance)
 	if err != nil {
 		return err
 	}

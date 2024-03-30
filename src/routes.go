@@ -20,18 +20,17 @@ func RegisterRoute(app *fiber.App, dbPool *pgxpool.Pool) {
 	authService := service.NewAuthService()
 
 	userRepository := repository.NewUserRepository()
-	userService := service.NewUserService(dbPool, userRepository, authService)
-	userController := controller.NewUserController(validator, userService)
-
 	transactionRepository := repository.NewTransactionRepository()
-	transactionService := service.NewTransactionService(dbPool, transactionRepository)
-	transactionController := controller.NewTransactionController(validator, transactionService, authService)
-
 	balanceRepository := repository.NewBalanceRepository()
-	balanceService := service.NewBalanceService(dbPool, balanceRepository, transactionRepository)
-	balanceController := controller.NewBalanceController(validator, balanceService, authService)
 
+	userService := service.NewUserService(dbPool, userRepository, authService)
+	transactionService := service.NewTransactionService(dbPool, transactionRepository, balanceRepository)
+	balanceService := service.NewBalanceService(dbPool, balanceRepository, transactionRepository)
 	imageService := service.NewImageService(security.GetAwsS3Session())
+
+	userController := controller.NewUserController(validator, userService)
+	transactionController := controller.NewTransactionController(validator, transactionService, authService)
+	balanceController := controller.NewBalanceController(validator, balanceService, authService)
 	imageController := controller.NewImageController(authService, imageService)
 
 	app.Post("/v1/user/register", userController.Register)
