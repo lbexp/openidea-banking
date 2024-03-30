@@ -9,12 +9,9 @@ import (
 	"openidea-banking/src/utils"
 
 	"github.com/gofiber/fiber/v2"
-<<<<<<< HEAD
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-=======
 	"github.com/gofiber/fiber/v2/middleware/logger"
->>>>>>> origin/main
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func StartApplication(port string, prefork bool) {
