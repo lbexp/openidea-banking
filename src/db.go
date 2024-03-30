@@ -53,10 +53,6 @@ func GetConnectionDB() *pgxpool.Pool {
 			log.Fatal(err)
 		}
 
-		err = dbPool.Ping(context.Background())
-		if err != nil {
-			log.Fatal(err)
-		}
 	})
 
 	return dbPool

@@ -22,6 +22,7 @@ func PrometheusMiddleware(ctx *fiber.Ctx) error {
 	err := ctx.Next()
 
 	status := ctx.Response().StatusCode()
-	httpRequestProm.WithLabelValues(ctx.Path(), ctx.Method(), http.StatusText(status)).Observe(float64(time.Since(start).Milliseconds()))
+	elapsedTime := float64(time.Since(start).Milliseconds())
+	httpRequestProm.WithLabelValues(ctx.Path(), ctx.Method(), http.StatusText(status)).Observe(elapsedTime)
 	return err
 }
