@@ -12,7 +12,7 @@ type TransactionGetAllData struct {
 	Balance          int               `json:"balance"`
 	Currency         string            `json:"currency"`
 	TransferProofImg string            `json:"transferProofImg"`
-	CreatedAt        string            `json:"createdAt"`
+	CreatedAt        int64             `json:"createdAt"`
 	Source           TransactionSource `json:"source"`
 }
 

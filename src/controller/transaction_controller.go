@@ -131,7 +131,7 @@ func (controller *TransactionControllerImpl) GetAllByUserId(ctx *fiber.Ctx) erro
 			Balance:          transaction.Balance,
 			Currency:         transaction.Currency,
 			TransferProofImg: transaction.ProofImageUrl,
-			CreatedAt:        transaction.CreatedAt,
+			CreatedAt:        transaction.CreatedAt.Unix(),
 			Source: transaction_model.TransactionSource{
 				BankAccountNumber: transaction.BankAccountNumber,
 				BankName:          transaction.BankName,

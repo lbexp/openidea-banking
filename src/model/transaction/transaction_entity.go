@@ -1,5 +1,7 @@
 package transaction_model
 
+import "time"
+
 type Transaction struct {
 	TransactionId     string
 	UserId            string
@@ -8,5 +10,5 @@ type Transaction struct {
 	ProofImageUrl     string
 	BankAccountNumber string
 	BankName          string
-	CreatedAt         string
+	CreatedAt         *time.Time
 }
