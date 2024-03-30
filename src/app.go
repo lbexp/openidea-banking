@@ -9,6 +9,7 @@ import (
 	"openidea-banking/src/utils"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func StartApplication(port string, prefork bool) {
@@ -20,6 +21,8 @@ func StartApplication(port string, prefork bool) {
 		ReadTimeout:  config.ReadTimeout,
 		Prefork:      prefork,
 	})
+
+	app.Use(logger.New())
 
 	db := GetConnectionDB()
 	defer db.Close()
