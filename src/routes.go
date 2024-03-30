@@ -2,6 +2,7 @@ package src
 
 import (
 	"openidea-banking/src/controller"
+	"openidea-banking/src/middleware"
 	"openidea-banking/src/repository"
 	"openidea-banking/src/security"
 	"openidea-banking/src/service"
@@ -35,6 +36,9 @@ func RegisterRoute(app *fiber.App, dbPool *pgxpool.Pool) {
 
 	app.Post("/v1/user/register", userController.Register)
 	app.Post("/v1/user/login", userController.Login)
+
+	app.Use(middleware.JWTHeaderMiddleware)
+	app.Use(middleware.JWTTokenMiddleware())
 
 	app.Post("/v1/transaction", transactionController.Create)
 
