@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"openidea-banking/src/middleware"
 	"openidea-banking/src/utils"
 	"time"
 
@@ -42,7 +43,7 @@ func (service *AuthServiceImpl) GenerateToken(ctx context.Context, userId string
 }
 
 func (service *AuthServiceImpl) GetValidUser(ctx *fiber.Ctx) (string, error) {
-	userInfo := ctx.Locals(viper.GetString("JWT_SECRET")).(*jwt.Token)
+	userInfo := ctx.Locals(middleware.JWT_CONTEXT_KEY).(*jwt.Token)
 	claims := userInfo.Claims.((jwt.MapClaims))
 	userId := claims["user_id"].(string)
 
