@@ -45,4 +45,10 @@ run-docker:
 	-p 8080:8080 \
 	banking-app
 
-.PHONY: migrateup migratedown run startprom startgrafana build clean build-docker run-docker
+docker-composeup:
+	docker compose up -d
+
+docker-composedown:
+	docker compose down
+
+.PHONY: migrateup migratedown run startprom startgrafana build clean build-docker run-docker docker-composeup docker-composedown
