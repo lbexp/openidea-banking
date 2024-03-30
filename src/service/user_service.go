@@ -41,6 +41,8 @@ func (service *UserServiceImpl) Register(ctx context.Context, user user_model.Us
 		return user_model.User{}, err
 	}
 
+	user.Password = hashedPass
+
 	userResult, err := service.UserRepository.Register(ctx, tx, user)
 	if err != nil {
 		tx.Rollback(ctx)

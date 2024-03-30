@@ -2,6 +2,7 @@ package src
 
 import (
 	"openidea-banking/src/controller"
+	"openidea-banking/src/middleware"
 	"openidea-banking/src/repository"
 	"openidea-banking/src/security"
 	"openidea-banking/src/service"
@@ -19,27 +20,30 @@ func RegisterRoute(app *fiber.App, dbPool *pgxpool.Pool) {
 	authService := service.NewAuthService()
 
 	userRepository := repository.NewUserRepository()
-	userService := service.NewUserService(dbPool, userRepository, authService)
-	userController := controller.NewUserController(validator, userService)
-
 	transactionRepository := repository.NewTransactionRepository()
-	transactionService := service.NewTransactionService(dbPool, transactionRepository)
-	transactionController := controller.NewTransactionController(validator, transactionService, authService)
-
 	balanceRepository := repository.NewBalanceRepository()
-	balanceService := service.NewBalanceService(dbPool, balanceRepository, transactionRepository)
-	balanceController := controller.NewBalanceController(validator, balanceService, authService)
 
+	userService := service.NewUserService(dbPool, userRepository, authService)
+	transactionService := service.NewTransactionService(dbPool, transactionRepository, balanceRepository)
+	balanceService := service.NewBalanceService(dbPool, balanceRepository, transactionRepository)
 	imageService := service.NewImageService(security.GetAwsS3Session())
+
+	userController := controller.NewUserController(validator, userService)
+	transactionController := controller.NewTransactionController(validator, transactionService, authService)
+	balanceController := controller.NewBalanceController(validator, balanceService, authService)
 	imageController := controller.NewImageController(authService, imageService)
 
 	app.Post("/v1/user/register", userController.Register)
 	app.Post("/v1/user/login", userController.Login)
 
+	app.Use(middleware.JWTHeaderMiddleware)
+	app.Use(middleware.JWTTokenMiddleware())
+
 	app.Post("/v1/transaction", transactionController.Create)
 
 	app.Post("/v1/balance", balanceController.Upsert)
 	app.Get("/v1/balance", balanceController.GetAll)
+	app.Get("/v1/balance/history", transactionController.GetAllByUserId)
 
 	app.Post("/v1/image", imageController.UploadImage)
 }

@@ -49,7 +49,7 @@ func (repository *UserRepositoryImpl) Login(ctx context.Context, conn *pgxpool.P
 		&userResult.UserId,
 		&userResult.Email,
 		&userResult.Password,
-		&userResult.Password,
+		&userResult.Name,
 	)
 	if err != nil {
 		if err == pgx.ErrNoRows {
