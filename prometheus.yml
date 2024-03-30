@@ -8,4 +8,4 @@ scrape_configs:
       - targets: ['host.docker.internal:8080'] # Use 'localhost:8080' if Prometheus and the metrics source are on the same machine without Docker.
   - job_name: docker
     static_configs:
-      - targets: ["host.docker.internal:9323"]
+      - targets: ["host.docker.internal:9323", "host.docker.internal:9100"]

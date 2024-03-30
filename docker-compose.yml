@@ -39,6 +39,12 @@ services:
       - '--storage.tsdb.path=/prometheus'
       # tell prometheus to reload if we hit `http://localhost:9090/-/reload` to reload changes in `./prometheus.yml`
       - '--web.enable-lifecycle'
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: monitoring_node_exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
   grafana:
     image: grafana/grafana:latest
     ports:
