@@ -76,7 +76,7 @@ func (repository *BalanceRepositoryImpl) GetAll(ctx context.Context, conn *pgxpo
 		balance := balance_model.Balance{}
 
 		err = rows.Scan(
-			&balance.BalanceId,
+			&balance.Balance,
 			&balance.Currency,
 		)
 		if err != nil {

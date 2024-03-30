@@ -1,8 +1,8 @@
 package balance_model
 
 type BalanceGetData struct {
-	Balance int    `json:"balance"`
-	Currecy string `json:"currency"`
+	Balance  int    `json:"balance"`
+	Currency string `json:"currency"`
 }
 
 type BalanceGetResponse struct {

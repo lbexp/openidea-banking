@@ -80,8 +80,8 @@ func (controller *BalanceControllerImpl) GetAll(ctx *fiber.Ctx) error {
 	var data []balance_model.BalanceGetData
 	for _, balance := range balances {
 		rowData := balance_model.BalanceGetData{
-			Balance: balance.Balance,
-			Currecy: balance.Currency,
+			Balance:  balance.Balance,
+			Currency: balance.Currency,
 		}
 
 		data = append(data, rowData)
