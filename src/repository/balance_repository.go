@@ -22,7 +22,7 @@ func NewBalanceRepository() BalanceRepository {
 }
 
 func (repository *BalanceRepositoryImpl) Upsert(ctx context.Context, tx pgx.Tx, balance balance_model.Balance) error {
-	QUERY := "INSERT INTO balances(user_id, currency, balance) values($1, $2, $3) ON CONFLICT(user_id,currency) DO UPDATE SET balance = balance + $3 RETURNING balance_id"
+	QUERY := "INSERT INTO balances(balance_id, user_id, currency, balance) values(gen_random_uuid(), $1, $2, $3) ON CONFLICT(user_id,currency) DO UPDATE SET balance = balance + $3 RETURNING balance_id"
 
 	res, err := tx.Exec(ctx, QUERY, balance.UserId, balance.Currency, balance.Balance)
 	if err != nil {

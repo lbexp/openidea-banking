@@ -22,7 +22,7 @@ func NewTransactionRepository() TransactionRepository {
 }
 
 func (repository *TransactionRepositoryImpl) Create(ctx context.Context, tx pgx.Tx, transaction transaction_model.Transaction) error {
-	QUERY := "INSERT INTO transactions(user_id, currency, balance, proof_image_url, bank_account_number, bank_name) values($1, $2, $3, $4, $5, $6) RETURNING transaction_id"
+	QUERY := "INSERT INTO transactions(transaction_id, user_id, currency, balance, proof_image_url, bank_account_number, bank_name) values(gen_random_uuid(), $1, $2, $3, $4, $5, $6)"
 
 	res, err := tx.Exec(ctx, QUERY, transaction.UserId, transaction.Currency, transaction.Balance, transaction.ProofImageUrl, transaction.BankAccountNumber, transaction.BankName)
 	if err != nil {
