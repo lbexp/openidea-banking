@@ -8,10 +8,9 @@ import (
 	"openidea-banking/src/middleware"
 	"openidea-banking/src/utils"
 
+	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/adaptor"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func StartApplication(port string, prefork bool) {
@@ -24,6 +23,9 @@ func StartApplication(port string, prefork bool) {
 		Prefork:      prefork,
 	})
 
+	prome := fiberprometheus.New("openidea-bank-app")
+	prome.RegisterAt(app, "/metrics")
+
 	app.Use(logger.New())
 
 	db := GetConnectionDB()
@@ -35,8 +37,7 @@ func StartApplication(port string, prefork bool) {
 	}
 
 	app.Use(healthChecker.HealthCheckMiddleware)
-	app.Use(middleware.PrometheusMiddleware)
-	app.Get("/metrics", adaptor.HTTPHandler(promhttp.Handler()))
+	app.Use(prome.Middleware)
 
 	RegisterRoute(app, dbPool)
 	app.Use(utils.HandleErrorNotFound)
