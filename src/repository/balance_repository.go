@@ -62,7 +62,7 @@ func (repository *BalanceRepositoryImpl) Update(ctx context.Context, tx pgx.Tx, 
 }
 
 func (repository *BalanceRepositoryImpl) GetAll(ctx context.Context, conn *pgxpool.Pool, userId string) ([]balance_model.Balance, error) {
-	QUERY := "SELECT balance, currency FROM balances WHERE user_id = $1"
+	QUERY := "SELECT balance, currency FROM balances WHERE user_id = $1 ORDER BY balance DESC"
 
 	rows, err := conn.Query(ctx, QUERY, userId)
 	if err != nil {
