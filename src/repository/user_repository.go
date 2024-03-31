@@ -53,7 +53,7 @@ func (repository *UserRepositoryImpl) Login(ctx context.Context, conn *pgxpool.P
 	)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return user_model.User{}, utils.ErrorConflict
+			return user_model.User{}, utils.ErrorNotFound
 		} else {
 			return user_model.User{}, utils.ErrorInternalServer
 		}
