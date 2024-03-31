@@ -5,6 +5,7 @@ go 1.22.1
 require (
 	github.com/ansrivas/fiberprometheus/v2 v2.6.1
 	github.com/aws/aws-sdk-go v1.51.11
+	github.com/cmackenzie1/pgxpool-prometheus v0.5.0
 	github.com/go-playground/validator/v10 v10.19.0
 	github.com/gofiber/contrib/jwt v1.0.8
 	github.com/gofiber/fiber/v2 v2.52.4
