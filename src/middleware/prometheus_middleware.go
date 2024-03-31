@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"net/http"
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -23,6 +23,6 @@ func PrometheusMiddleware(ctx *fiber.Ctx) error {
 
 	status := ctx.Response().StatusCode()
 	elapsedTime := float64(time.Since(start).Milliseconds())
-	httpRequestProm.WithLabelValues(ctx.Path(), ctx.Method(), http.StatusText(status)).Observe(elapsedTime)
+	httpRequestProm.WithLabelValues(ctx.Path(), ctx.Method(), fmt.Sprintf("%v", status)).Observe(elapsedTime)
 	return err
 }

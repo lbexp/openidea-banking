@@ -43,6 +43,7 @@ func (service *TransactionServiceImpl) Create(ctx context.Context, transaction t
 	}
 
 	balance.Balance = -transaction.Balance
+	transaction.Balance = -transaction.Balance
 
 	tx, err := service.DBPool.Begin(ctx)
 	defer func() {

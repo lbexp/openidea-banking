@@ -46,7 +46,7 @@ run-docker:
 	banking-app
 
 docker-composeup:
-	docker compose up -d
+	DB_HOST=host.docker.internal docker compose up -d
 
 docker-composedown:
 	docker compose down
