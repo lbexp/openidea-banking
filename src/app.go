@@ -10,7 +10,6 @@ import (
 
 	"github.com/ansrivas/fiberprometheus/v2"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func StartApplication(port string, prefork bool) {
@@ -26,7 +25,7 @@ func StartApplication(port string, prefork bool) {
 	prome := fiberprometheus.New("openidea-bank-app")
 	prome.RegisterAt(app, "/metrics")
 
-	app.Use(logger.New())
+	//app.Use(logger.New())
 
 	db := GetConnectionDB()
 	defer db.Close()
