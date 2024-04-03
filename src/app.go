@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 
-	"openidea-banking/src/config"
 	"openidea-banking/src/middleware"
 	"openidea-banking/src/utils"
 
@@ -14,12 +13,9 @@ import (
 
 func StartApplication(port string, prefork bool) {
 	app := fiber.New(fiber.Config{
-		JSONEncoder:  json.Marshal,
-		JSONDecoder:  json.Unmarshal,
-		IdleTimeout:  config.IdleTimeout,
-		WriteTimeout: config.WriteTimeout,
-		ReadTimeout:  config.ReadTimeout,
-		Prefork:      prefork,
+		JSONEncoder: json.Marshal,
+		JSONDecoder: json.Unmarshal,
+		Prefork:     prefork,
 	})
 
 	prome := fiberprometheus.New("openidea-bank-app")
