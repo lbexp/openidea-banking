@@ -14,6 +14,7 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /app
 
 COPY --from=builder /app/main .
+COPY --from=builder /app/database_secret.pem ap-southeast-1-bundle.pem
 
 EXPOSE 8080
 
