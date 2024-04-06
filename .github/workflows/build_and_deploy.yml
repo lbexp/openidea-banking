@@ -18,9 +18,12 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
             aws-region: ${{secrets.AWS_REGION}}
         - name: Get secret file
+          env:
+            DB_PEM: ${{ secrets.DB_PEM }}
+            APP_TASK_DF: ${{ secrets.AWS_APP_DEPLOY_TASK_DEFINITION }}
           run: |
-            echo "${{ secrets.DB_PEM }}" > database_secret.pem
-            echo "${{ secrets.AWS_APP_DEPLOY_TASK_DEFINITION }}" > task_definition.json
+            echo "$DB_PEM" > database_secret.pem
+            echo "$APP_TASK_DF" > task_definition.json
 
         - name: Login to Amazon ECR
           id: login-pf-aws-ecr
