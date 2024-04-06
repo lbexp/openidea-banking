@@ -43,7 +43,7 @@ jobs:
           with:
               task-definition: task_definition.json
               container-name: hyperbank-backend-container
-              image: ${{ env.IMAGE_TAG }}
+              image: ${{env.ECR_REGISTRY}}/${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}}
 
         - name: Deploy to Amazon ECS service
           uses: aws-actions/amazon-ecs-deploy-task-definition@v1
