@@ -20,7 +20,9 @@ jobs:
         - name: Get secret file
           env:
             DB_SECRET_PEM: ${{ secrets.DB_PEM }}
-          run: echo "${DB_SECRET_PEM}" > database_secret.pem
+          run: |
+            echo "${DB_SECRET_PEM}" > database_secret.pem
+            echo "${AWS_APP_DEPLOY_TASK_DEFINITION}" > task_definition.json
 
         - name: Login to Amazon ECR
           id: login-pf-aws-ecr
@@ -39,7 +41,7 @@ jobs:
           id: task-def
           uses: aws-actions/amazon-ecs-render-task-definition@v1
           with:
-              task-definition: ${{ env.AWS_APP_DEPLOY_TASK_DEFINITION }}
+              task-definition: task_definition.json
               container-name: hyperbank-backend-container
               image: ${{ env.IMAGE_TAG }}
 
