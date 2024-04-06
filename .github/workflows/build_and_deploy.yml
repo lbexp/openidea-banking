@@ -18,11 +18,9 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
             aws-region: ${{secrets.AWS_REGION}}
         - name: Get secret file
-          env:
-            DB_SECRET_PEM: ${{ secrets.DB_PEM }}
           run: |
-            echo "${DB_SECRET_PEM}" > database_secret.pem
-            echo "${AWS_APP_DEPLOY_TASK_DEFINITION}" > task_definition.json
+            echo "${{ secrets.DB_PEM }}" > database_secret.pem
+            echo "${{ secrets.AWS_APP_DEPLOY_TASK_DEFINITION }}" > task_definition.json
 
         - name: Login to Amazon ECR
           id: login-pf-aws-ecr
@@ -40,6 +38,10 @@ jobs:
         - name: Fill in the new image ID in the Amazon ECS task definition
           id: task-def
           uses: aws-actions/amazon-ecs-render-task-definition@v1
+          env:
+            ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
+            ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPO }}
+            IMAGE_TAG: latest
           with:
               task-definition: task_definition.json
               container-name: hyperbank-backend-container
